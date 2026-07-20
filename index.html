@@ -2,16 +2,15 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Echo - Connexion Serveur Autoritaire</title>
+    <title>Echo T-RPG - Connexion</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Image de fond depuis ton dossier assets/img */
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('assets/img/background.png') no-repeat center center fixed;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('assets/img/background.png') no-repeat center center fixed;
             background-size: cover;
-            color: #fff;
+            color: #e0e0e0;
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -19,114 +18,170 @@
         }
 
         .card {
-            background: rgba(30, 30, 30, 0.85);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 12px;
+            background: rgba(16, 22, 28, 0.92);
+            border: 2px solid #5c4d33;
+            padding: 35px 30px;
+            border-radius: 8px;
             width: 100%;
-            max-width: 420px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 440px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 0, 0, 0.5);
             text-align: center;
         }
 
-        .logo-container img {
-            max-width: 120px;
-            height: auto;
-            margin-bottom: 15px;
+        .input-group {
+            position: relative;
+            margin: 15px 0;
         }
 
-        h2 {
-            margin-bottom: 5px;
-            font-size: 24px;
-            color: #4CAF50;
-        }
-
-        .subtitle {
-            font-size: 13px;
-            color: #aaa;
-            margin-bottom: 20px;
+        .input-group span {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8c8c8c;
+            font-size: 16px;
         }
 
         input {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            background: rgba(20, 20, 20, 0.9);
-            border: 1px solid #444;
+            padding: 14px 14px 14px 45px;
+            background: rgba(10, 14, 18, 0.9);
+            border: 1px solid #333b42;
             color: #fff;
-            border-radius: 6px;
-            font-size: 14px;
+            border-radius: 4px;
+            font-size: 15px;
         }
 
         input:focus {
-            border-color: #4CAF50;
+            border-color: #d4af37;
             outline: none;
+            box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
         }
 
-        button {
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            background: linear-gradient(to bottom, #d4af37, #996515);
+            color: #111;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ffdf73;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to bottom, #e6c550, #b37719);
+            box-shadow: 0 6px 15px rgba(212,175,55,0.3);
+        }
+
+        .divider {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #777;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #333b42;
+        }
+
+        .divider::before { margin-right: 15px; }
+        .divider::after { margin-left: 15px; }
+
+        .link-forgot {
+            display: block;
+            margin: 10px 0 5px 0;
+            color: #9da5b0;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .link-forgot:hover { 
+            color: #d4af37; 
+            text-decoration: underline; 
+        }
+
+        .btn-secondary {
             width: 100%;
             padding: 12px;
-            margin-top: 15px;
-            background: #4CAF50;
-            color: white;
-            font-weight: bold;
-            font-size: 15px;
-            border-radius: 6px;
-            border: none;
+            background: rgba(25, 33, 41, 0.8);
+            color: #c0c6cc;
+            font-weight: 600;
+            font-size: 14px;
+            border-radius: 4px;
+            border: 1px solid #3a4654;
             cursor: pointer;
-            transition: background 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
         }
 
-        button:hover {
-            background: #43a047;
+        .btn-secondary:hover {
+            background: rgba(35, 47, 59, 1);
+            color: #fff;
+            border-color: #5c6d80;
         }
 
         #log {
             margin-top: 20px;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 6px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 13px;
+            padding: 10px;
+            background: rgba(5, 8, 12, 0.9);
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
             text-align: left;
-            max-height: 120px;
+            max-height: 100px;
             overflow-y: auto;
-            border: 1px solid #333;
+            border: 1px solid #222;
+            color: #7ec699;
         }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <!-- Emplacement de ton logo -->
-    <div class="logo-container">
-        <img src="assets/img/logo.png" alt="Echo Logo" onerror="this.style.display='none'">
+    <div class="input-group">
+        <span>👤</span>
+        <input type="text" id="username" placeholder="Nom d'utilisateur" value="HeroTactical">
     </div>
-
-    <h2>Echo T-RPG</h2>
-    <p class="subtitle">Portail d'Accès Sécurisé - Serveur Autoritaire</p>
     
-    <input type="text" id="username" placeholder="Pseudo du joueur" value="HeroTactical">
-    <input type="password" id="password" placeholder="Mot de passe" value="MonSuperMotDePasse">
+    <div class="input-group">
+        <span>🔒</span>
+        <input type="password" id="password" placeholder="Mot de passe" value="MonSuperMotDePasse">
+    </div>
     
-    <button onclick="sendRegister()">S'inscrire / Connexion</button>
+    <button class="btn-primary" onclick="sendAction('login')">Se connecter</button>
     
-    <div id="log">État : Initialisation...</div>
+    <a href="#" class="link-forgot" onclick="return false;">Mot de passe oublié ?</a>
+    
+    <div class="divider">ou</div>
+    
+    <button class="btn-secondary" onclick="sendAction('register')">Créer un compte</button>
+    
+    <div id="log">État : Initialisation de la connexion...</div>
 </div>
 
 <script>
     const logDiv = document.getElementById('log');
 
     function appendLog(message, isError = false) {
-        logDiv.innerHTML += `<span style="color: ${isError ? '#ff5252' : '#81c784'}">${message}</span><br>`;
+        logDiv.innerHTML += `<div style="color: ${isError ? '#ff5252' : '#7ec699'}">${message}</div>`;
         logDiv.scrollTop = logDiv.scrollHeight;
     }
 
-    // Connexion WebSocket vers ton serveur distant Codespaces
     const serverUrl = 'wss://ubiquitous-succotash-5gp4949j4x6wc79p6-8080.app.github.dev';
-    appendLog(`Connexion à ${serverUrl}...`);
-
     const ws = new WebSocket(serverUrl);
 
     ws.onopen = () => {
@@ -138,38 +193,38 @@
             const data = JSON.parse(event.data);
             appendLog(`📩 Réponse : ${JSON.stringify(data)}`);
         } catch (e) {
-            appendLog(`📩 Données brutes : ${event.data}`);
+            appendLog(`📩 Données : ${event.data}`);
         }
     };
 
-    ws.onerror = (error) => {
-        appendLog("🔴 Erreur de connexion au serveur (Vérifie le port public).", true);
+    ws.onerror = () => {
+        appendLog("🔴 Erreur de connexion au serveur.", true);
     };
 
     ws.onclose = () => {
-        appendLog("❌ Connexion fermée par le serveur.", true);
+        appendLog("❌ Déconnecté du serveur.", true);
     };
 
-    function sendRegister() {
+    function sendAction(actionType) {
         const user = document.getElementById('username').value;
         const pass = document.getElementById('password').value;
 
         if (!user || !pass) {
-            appendLog("⚠️ Veuillez remplir tous les champs.", true);
+            appendLog("⚠️ Remplissez tous les champs.", true);
             return;
         }
 
         const packet = {
-            action: "register",
+            action: actionType,
             username: user,
             password: pass
         };
 
         if (ws.readyState === WebSocket.OPEN) {
             ws.send(JSON.stringify(packet));
-            appendLog(`📤 Envoi de l'inscription pour [${user}]...`);
+            appendLog(`📤 Envoi [${actionType}] pour ${user}...`);
         } else {
-            appendLog("🔴 Impossible d'envoyer : Non connecté.", true);
+            appendLog("🔴 Non connecté au serveur.", true);
         }
     }
 </script>
