@@ -30,8 +30,7 @@
 
 <script>
     // Connexion au WebSocket de ton serveur 
-    // (Si hébergé en local : ws://localhost:8080. Si hébergé en ligne, mettra l'IP du Codespaces/VPS)
-    const ws = new WebSocket('ws://localhost:8080');
+const ws = new WebSocket('wss://ubiquitous-succotash-5gp4949j4x6wc79p6-8080.app.github.dev');
 
     ws.onopen = () => {
         document.getElementById('log').innerHTML = "🟢 Connecté au serveur WebSocket !<br>";
