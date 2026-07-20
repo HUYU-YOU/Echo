@@ -2,6 +2,7 @@ using UnityEngine;
 using NativeWebSocket;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine.SceneManagement; // Ajout pour gérer les transitions d'écrans
 
 // --- STRUCTURES DE DONNÉES ---
 [System.Serializable]
@@ -68,7 +69,7 @@ public class NetworkManager : MonoBehaviour
         CharacterPacket packet = new CharacterPacket
         {
             action = "create_character",
-            token = jwtToken, // On envoie le badge de sécurité !
+            token = jwtToken,
             data = new CharacterData { serverName = server, characterName = charName, classId = classId, skinId = skinId, colors = colorsJson }
         };
         await SendText(JsonUtility.ToJson(packet));
@@ -79,28 +80,34 @@ public class NetworkManager : MonoBehaviour
         if (websocket != null && websocket.State == WebSocketState.Open) { await websocket.SendText(json); }
     }
 
-    // --- GESTION DES RÉPONSES ---
+    // --- GESTION DES RÉPONSES ET CHANGEMENTS DE SCÈNES ---
     private void HandleServerMessage(string json)
     {
         ServerResponse response = JsonUtility.FromJson<ServerResponse>(json);
 
-        if (response.action == "login_response" && response.status == "success")
+        if (response.action == "login_response")
         {
-            jwtToken = response.token;
-            Debug.Log("✅ Connexion réussie ! Token sauvegardé.");
+            if (response.status == "success")
+            {
+                jwtToken = response.token;
+                Debug.Log("✅ Connexion réussie ! Chargement de la sélection de serveurs...");
+                SceneManager.LoadScene("02_ServerSelect"); // On charge la scène suivante
+            }
+            else { Debug.LogError("❌ " + response.message); }
         }
         else if (response.action == "create_character_response")
         {
-            if (response.status == "success") Debug.Log("✅ Personnage créé et validé par le serveur ! " + response.message);
-            else Debug.LogError("❌ Refus du serveur : " + response.message);
+            if (response.status == "success")
+            {
+                Debug.Log("✅ Personnage validé ! Entrée en jeu...");
+                SceneManager.LoadScene("04_WorldMap"); // On charge le jeu
+            }
+            else { Debug.LogError("❌ Refus du serveur : " + response.message); }
         }
-        else if (response.status == "error")
+        else if (response.action == "register_response")
         {
-            Debug.LogError("❌ Erreur : " + response.message);
-        }
-        else if (response.status == "success")
-        {
-            Debug.Log("✅ Succès : " + response.message);
+            if (response.status == "success") Debug.Log("✅ Succès : " + response.message);
+            else Debug.LogError("❌ Erreur : " + response.message);
         }
     }
 
