@@ -1,0 +1,57 @@
+// SERVER/index.js
+const WebSocket = require('ws');
+
+// On lance le serveur sur le port 8080
+const wss = new WebSocket.Server({ port: 8080 });
+
+console.log("Serveur Tactical RPG démarré sur le port 8080...");
+
+wss.on('connection', function connection(ws) {
+    console.log("Un nouveau client vient de se connecter.");
+
+    // Écoute des messages venant du client
+    ws.on('message', function incoming(message) {
+        console.log("Message reçu : %s", message);
+        
+        try {
+            // Le client et le serveur communiquent via des paquets JSON
+            const packet = JSON.parse(message);
+
+            // Routage de l'action (ici, vers le futur AuthHandler)
+            if (packet.action === "login") {
+                handleLogin(ws, packet.data);
+            }
+        } catch (e) {
+            console.error("Erreur de parsing JSON :", e);
+        }
+    });
+
+    // En cas de déconnexion
+    ws.on('close', () => {
+        console.log("Client déconnecté.");
+    });
+});
+
+// Fonction temporaire pour valider la communication
+function handleLogin(ws, data) {
+    const { username, password } = data;
+
+    // Simulation d'une vérification (En Phase 2, on interrogera la DB)
+    if (username === "Echo" && password === "1234") {
+        // Succès
+        const response = {
+            action: "login_response",
+            status: "success",
+            message: "Connexion réussie. Bienvenue sur le serveur !"
+        };
+        ws.send(JSON.stringify(response));
+    } else {
+        // Échec
+        const response = {
+            action: "login_response",
+            status: "error",
+            message: "Identifiants incorrects."
+        };
+        ws.send(JSON.stringify(response));
+    }
+}
