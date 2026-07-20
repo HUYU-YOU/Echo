@@ -1,5 +1,6 @@
 // SERVER/index.js
 const WebSocket = require('ws');
+const AuthHandler = require('./Network/AuthHandler'); // Import placé en haut
 
 // On lance le serveur sur le port 8080
 const wss = new WebSocket.Server({ port: 8080 });
@@ -17,9 +18,13 @@ wss.on('connection', function connection(ws) {
             // Le client et le serveur communiquent via des paquets JSON
             const packet = JSON.parse(message);
 
-            // Routage de l'action (ici, vers le futur AuthHandler)
+            // Routage de l'action selon la demande du client
             if (packet.action === "login") {
                 handleLogin(ws, packet.data);
+            } 
+            else if (packet.action === "register") {
+                // Appel à notre nouvelle classe d'authentification
+                AuthHandler.handleRegister(ws, packet.data);
             }
         } catch (e) {
             console.error("Erreur de parsing JSON :", e);
@@ -32,13 +37,12 @@ wss.on('connection', function connection(ws) {
     });
 });
 
-// Fonction temporaire pour valider la communication
+// Fonction temporaire pour valider le login (Sera bientôt déplacée dans AuthHandler)
 function handleLogin(ws, data) {
     const { username, password } = data;
 
-    // Simulation d'une vérification (En Phase 2, on interrogera la DB)
+    // Simulation d'une vérification (Bientôt remplacée par la vraie BDD)
     if (username === "Echo" && password === "1234") {
-        // Succès
         const response = {
             action: "login_response",
             status: "success",
@@ -46,7 +50,6 @@ function handleLogin(ws, data) {
         };
         ws.send(JSON.stringify(response));
     } else {
-        // Échec
         const response = {
             action: "login_response",
             status: "error",
