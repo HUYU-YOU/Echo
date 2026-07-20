@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Echo - Test Connexion Joueur</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #121212; color: #fff; padding: 50px; }
+        .card { background: #1e1e1e; padding: 20px; border-radius: 8px; max-width: 400px; margin: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        input, button { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border-radius: 4px; border: none; }
+        input { background: #2d2d2d; color: #fff; }
+        button { background: #4CAF50; color: white; font-weight: bold; cursor: pointer; }
+        button:hover { background: #45a049; }
+        #log { margin-top: 15px; padding: 10px; background: #000; border-radius: 4px; font-family: monospace; font-size: 14px; min-height: 50px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Echo - Inscription / Test</h2>
+    <p>Connecté au Serveur Autoritaire</p>
+    
+    <input type="text" id="username" placeholder="Pseudo du joueur" value="JoueurTest">
+    <input type="password" id="password" placeholder="Mot de passe" value="MonSuperMotDePasse">
+    
+    <button onclick="sendRegister()">S'inscrire</button>
+    
+    <h3>Console du Client :</h3>
+    <div id="log">En attente d'action...</div>
+</div>
+
+<script>
+    // Connexion au WebSocket de ton serveur 
+    // (Si hébergé en local : ws://localhost:8080. Si hébergé en ligne, mettra l'IP du Codespaces/VPS)
+    const ws = new WebSocket('ws://localhost:8080');
+
+    ws.onopen = () => {
+        document.getElementById('log').innerHTML = "🟢 Connecté au serveur WebSocket !<br>";
+    };
+
+    ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        document.getElementById('log').innerHTML += "📩 Réponse : " + JSON.stringify(data) + "<br>";
+    };
+
+    ws.onerror = (error) => {
+        document.getElementById('log').innerHTML += "🔴 Erreur de connexion au serveur.<br>";
+    };
+
+    function sendRegister() {
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+
+        const packet = {
+            action: "register",
+            username: user,
+            password: pass
+        };
+
+        ws.send(JSON.stringify(packet));
+        document.getElementById('log').innerHTML += "📤 Envoi de la demande d'inscription pour " + user + "...<br>";
+    }
+</script>
+
+</body>
+</html>
