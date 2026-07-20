@@ -2,52 +2,162 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Echo - Test Connexion Joueur</title>
+    <title>Echo - Connexion Serveur Autoritaire</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #121212; color: #fff; padding: 50px; }
-        .card { background: #1e1e1e; padding: 20px; border-radius: 8px; max-width: 400px; margin: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        input, button { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; border-radius: 4px; border: none; }
-        input { background: #2d2d2d; color: #fff; }
-        button { background: #4CAF50; color: white; font-weight: bold; cursor: pointer; }
-        button:hover { background: #45a049; }
-        #log { margin-top: 15px; padding: 10px; background: #000; border-radius: 4px; font-family: monospace; font-size: 14px; min-height: 50px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Image de fond depuis ton dossier assets/img */
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('assets/img/background.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .logo-container img {
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            margin-bottom: 5px;
+            font-size: 24px;
+            color: #4CAF50;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background: #4CAF50;
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #43a047;
+        }
+
+        #log {
+            margin-top: 20px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            text-align: left;
+            max-height: 120px;
+            overflow-y: auto;
+            border: 1px solid #333;
+        }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>Echo - Inscription / Test</h2>
-    <p>Connecté au Serveur Autoritaire</p>
+    <!-- Emplacement de ton logo -->
+    <div class="logo-container">
+        <img src="assets/img/logo.png" alt="Echo Logo" onerror="this.style.display='none'">
+    </div>
+
+    <h2>Echo T-RPG</h2>
+    <p class="subtitle">Portail d'Accès Sécurisé - Serveur Autoritaire</p>
     
-    <input type="text" id="username" placeholder="Pseudo du joueur" value="JoueurTest">
+    <input type="text" id="username" placeholder="Pseudo du joueur" value="HeroTactical">
     <input type="password" id="password" placeholder="Mot de passe" value="MonSuperMotDePasse">
     
-    <button onclick="sendRegister()">S'inscrire</button>
+    <button onclick="sendRegister()">S'inscrire / Connexion</button>
     
-    <h3>Console du Client :</h3>
-    <div id="log">En attente d'action...</div>
+    <div id="log">État : Initialisation...</div>
 </div>
 
 <script>
-    // Connexion au WebSocket de ton serveur 
-const ws = new WebSocket('wss://ubiquitous-succotash-5gp4949j4x6wc79p6-8080.app.github.dev');
+    const logDiv = document.getElementById('log');
+
+    function appendLog(message, isError = false) {
+        logDiv.innerHTML += `<span style="color: ${isError ? '#ff5252' : '#81c784'}">${message}</span><br>`;
+        logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    // Connexion WebSocket vers ton serveur distant Codespaces
+    const serverUrl = 'wss://ubiquitous-succotash-5gp4949j4x6wc79p6-8080.app.github.dev';
+    appendLog(`Connexion à ${serverUrl}...`);
+
+    const ws = new WebSocket(serverUrl);
 
     ws.onopen = () => {
-        document.getElementById('log').innerHTML = "🟢 Connecté au serveur WebSocket !<br>";
+        appendLog("🟢 Connecté au serveur WebSocket !");
     };
 
     ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        document.getElementById('log').innerHTML += "📩 Réponse : " + JSON.stringify(data) + "<br>";
+        try {
+            const data = JSON.parse(event.data);
+            appendLog(`📩 Réponse : ${JSON.stringify(data)}`);
+        } catch (e) {
+            appendLog(`📩 Données brutes : ${event.data}`);
+        }
     };
 
     ws.onerror = (error) => {
-        document.getElementById('log').innerHTML += "🔴 Erreur de connexion au serveur.<br>";
+        appendLog("🔴 Erreur de connexion au serveur (Vérifie le port public).", true);
+    };
+
+    ws.onclose = () => {
+        appendLog("❌ Connexion fermée par le serveur.", true);
     };
 
     function sendRegister() {
         const user = document.getElementById('username').value;
         const pass = document.getElementById('password').value;
+
+        if (!user || !pass) {
+            appendLog("⚠️ Veuillez remplir tous les champs.", true);
+            return;
+        }
 
         const packet = {
             action: "register",
@@ -55,8 +165,12 @@ const ws = new WebSocket('wss://ubiquitous-succotash-5gp4949j4x6wc79p6-8080.app.
             password: pass
         };
 
-        ws.send(JSON.stringify(packet));
-        document.getElementById('log').innerHTML += "📤 Envoi de la demande d'inscription pour " + user + "...<br>";
+        if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify(packet));
+            appendLog(`📤 Envoi de l'inscription pour [${user}]...`);
+        } else {
+            appendLog("🔴 Impossible d'envoyer : Non connecté.", true);
+        }
     }
 </script>
 
