@@ -1,60 +1,31 @@
-// SERVER/index.js
 const WebSocket = require('ws');
-const AuthHandler = require('./Network/AuthHandler'); // Import placé en haut
+const AuthHandler = require('./Network/AuthHandler');
 
-// On lance le serveur sur le port 8080
 const wss = new WebSocket.Server({ port: 8080 });
 
 console.log("Serveur Tactical RPG démarré sur le port 8080...");
 
 wss.on('connection', function connection(ws) {
-    console.log("Un nouveau client vient de se connecter.");
+    console.log("Nouveau client connecté.");
 
-    // Écoute des messages venant du client
     ws.on('message', function incoming(message) {
-        console.log("Message reçu : %s", message);
-        
         try {
-            // Le client et le serveur communiquent via des paquets JSON
             const packet = JSON.parse(message);
 
-            // Routage de l'action selon la demande du client
-            if (packet.action === "login") {
-                handleLogin(ws, packet.data);
-            } 
-            else if (packet.action === "register") {
-                // Appel à notre nouvelle classe d'authentification
+            // Routage des requêtes du client
+            if (packet.action === "register") {
                 AuthHandler.handleRegister(ws, packet.data);
             }
+            else if (packet.action === "login") {
+                // Sera lié au LoginHandler à la prochaine étape
+                console.log("Tentative de login reçue pour :", packet.data.username);
+            }
         } catch (e) {
-            console.error("Erreur de parsing JSON :", e);
+            console.error("Format de paquet JSON invalide :", e);
         }
     });
 
-    // En cas de déconnexion
     ws.on('close', () => {
         console.log("Client déconnecté.");
     });
 });
-
-// Fonction temporaire pour valider le login (Sera bientôt déplacée dans AuthHandler)
-function handleLogin(ws, data) {
-    const { username, password } = data;
-
-    // Simulation d'une vérification (Bientôt remplacée par la vraie BDD)
-    if (username === "Echo" && password === "1234") {
-        const response = {
-            action: "login_response",
-            status: "success",
-            message: "Connexion réussie. Bienvenue sur le serveur !"
-        };
-        ws.send(JSON.stringify(response));
-    } else {
-        const response = {
-            action: "login_response",
-            status: "error",
-            message: "Identifiants incorrects."
-        };
-        ws.send(JSON.stringify(response));
-    }
-}
