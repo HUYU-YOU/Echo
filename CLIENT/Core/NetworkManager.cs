@@ -1,8 +1,9 @@
-// CLIENT/Core/NetworkManager.cs
 using UnityEngine;
-using NativeWebSocket; // Nécessite l'installation du package NativeWebSocket
+using NativeWebSocket;
 using System.Text;
+using System.Threading.Tasks;
 
+// --- STRUCTURES DE DONNÉES POUR LE JSON ---
 [System.Serializable]
 public class AuthPacket
 {
@@ -17,64 +18,129 @@ public class AuthData
     public string password;
 }
 
+[System.Serializable]
+public class ServerResponse
+{
+    public string action;
+    public string status;
+    public string message;
+    public string token; // Sera rempli uniquement lors d'un login réussi
+}
+
 public class NetworkManager : MonoBehaviour
 {
+    public static NetworkManager Instance; // Pattern Singleton pour y accéder depuis n'importe quel script (ex: UI Login)
+
     WebSocket websocket;
+    
+    // C'est ici que l'on garde le précieux "badge" d'identification (JWT) du joueur
+    [HideInInspector]
+    public string jwtToken = ""; 
+
+    private void Awake()
+    {
+        // Permet au NetworkManager de survivre lors des chargements de scènes (du Login vers la Map)
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     async void Start()
     {
-        // Connexion au serveur local
+        // Connexion au serveur local (À changer par l'IP de production plus tard)
         websocket = new WebSocket("ws://localhost:8080");
 
-        websocket.OnOpen += () =>
-        {
-            Debug.Log("Connecté au serveur !");
-            // Dès qu'on est connecté, on tente de s'identifier
-            SendLoginRequest("Echo", "1234");
+        websocket.OnOpen += () => 
+        { 
+            Debug.Log("[Réseau] Connecté au serveur !"); 
         };
 
-        websocket.OnError += (e) => Debug.Log("Erreur : " + e);
-        websocket.OnClose += (e) => Debug.Log("Connexion fermée !");
+        websocket.OnError += (e) => { Debug.LogError("[Réseau] Erreur : " + e); };
+        websocket.OnClose += (e) => { Debug.Log("[Réseau] Connexion fermée."); };
         
         websocket.OnMessage += (bytes) =>
         {
-            // Réception de la réponse du serveur
-            var message = Encoding.UTF8.GetString(bytes);
-            Debug.Log("Réponse du serveur : " + message);
-            // C'est ici que le GameManager lira "success" pour charger la scène 02_ServerSelect
+            string jsonMessage = Encoding.UTF8.GetString(bytes);
+            HandleServerMessage(jsonMessage);
         };
 
-        // Lancement asynchrone de la connexion
         await websocket.Connect();
     }
 
     void Update()
     {
-        // Nécessaire pour traiter les messages entrants dans le thread principal d'Unity
+        // Obligatoire pour traiter les messages entrants dans le thread principal d'Unity
         #if !UNITY_WEBGL || UNITY_EDITOR
-        websocket.DispatchMessageQueue();
+        if (websocket != null && websocket.State == WebSocketState.Open)
+        {
+            websocket.DispatchMessageQueue();
+        }
         #endif
+    }
+
+    // --- ENVOI DES REQUÊTES ---
+
+    public async void SendRegisterRequest(string user, string pass)
+    {
+        AuthPacket packet = new AuthPacket { action = "register", data = new AuthData { username = user, password = pass } };
+        await SendPacket(packet);
     }
 
     public async void SendLoginRequest(string user, string pass)
     {
-        // Création du paquet JSON
-        AuthPacket packet = new AuthPacket
-        {
-            action = "login",
-            data = new AuthData { username = user, password = pass }
-        };
+        AuthPacket packet = new AuthPacket { action = "login", data = new AuthData { username = user, password = pass } };
+        await SendPacket(packet);
+    }
 
-        string jsonMessage = JsonUtility.ToJson(packet);
-        
-        if (websocket.State == WebSocketState.Open)
+    private async Task SendPacket(AuthPacket packet)
+    {
+        if (websocket != null && websocket.State == WebSocketState.Open)
         {
-            await websocket.SendText(jsonMessage);
+            string json = JsonUtility.ToJson(packet);
+            await websocket.SendText(json);
+        }
+    }
+
+    // --- GESTION DES RÉPONSES DU SERVEUR ---
+
+    private void HandleServerMessage(string json)
+    {
+        ServerResponse response = JsonUtility.FromJson<ServerResponse>(json);
+
+        if (response.action == "login_response")
+        {
+            if (response.status == "success")
+            {
+                jwtToken = response.token;
+                Debug.Log("✅ Succès ! Token JWT sauvegardé en mémoire.");
+                // TODO (Plus tard) : C'est ici qu'on appellera le GameManager pour charger la Scène 02_ServerSelect
+            }
+            else
+            {
+                Debug.LogError("❌ Échec de connexion : " + response.message);
+            }
+        }
+        else if (response.action == "register_response")
+        {
+            if (response.status == "success")
+            {
+                Debug.Log("✅ Inscription réussie, tu peux maintenant te connecter !");
+            }
+            else
+            {
+                Debug.LogError("❌ Échec de l'inscription : " + response.message);
+            }
         }
     }
 
     private async void OnApplicationQuit()
     {
-        await websocket.Close();
+        if (websocket != null) await websocket.Close();
     }
 }
