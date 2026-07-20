@@ -1,5 +1,6 @@
 const WebSocket = require('ws');
 const AuthHandler = require('./Network/AuthHandler');
+const CharacterHandler = require('./Network/CharacterHandler'); // Nouvel import
 
 const wss = new WebSocket.Server({ port: 8080 });
 
@@ -18,6 +19,10 @@ wss.on('connection', function connection(ws) {
             }
             else if (packet.action === "login") {
                 AuthHandler.handleLogin(ws, packet.data);
+            }
+            else if (packet.action === "create_character") {
+                // On passe le packet complet pour que le Handler puisse lire le Token
+                CharacterHandler.handleCreateCharacter(ws, packet);
             }
             else {
                 console.log(`Action non reconnue : ${packet.action}`);
