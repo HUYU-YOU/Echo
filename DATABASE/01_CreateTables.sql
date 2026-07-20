@@ -1,4 +1,4 @@
--- Création de la table des Joueurs
+-- Création de la table principale des joueurs
 CREATE TABLE IF NOT EXISTS Users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
