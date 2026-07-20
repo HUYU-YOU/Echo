@@ -17,8 +17,10 @@ wss.on('connection', function connection(ws) {
                 AuthHandler.handleRegister(ws, packet.data);
             }
             else if (packet.action === "login") {
-                // Sera lié au LoginHandler à la prochaine étape
-                console.log("Tentative de login reçue pour :", packet.data.username);
+                AuthHandler.handleLogin(ws, packet.data);
+            }
+            else {
+                console.log(`Action non reconnue : ${packet.action}`);
             }
         } catch (e) {
             console.error("Format de paquet JSON invalide :", e);
