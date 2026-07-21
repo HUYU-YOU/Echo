@@ -1,122 +1,179 @@
-/* Reset basique */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
+* { box-sizing: border-box; margin: 0; padding: 0; }
+        
 body {
-    background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2560&auto=format&fit=crop'); /* Image de fond temporaire sombre */
-    background-size: cover;
-    background-position: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #e0e0e0;
     height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: white;
+    padding-bottom: 5vh;
+    margin: 0;
+    overflow: hidden; /* Empêche les barres de défilement */
 }
 
-/* Assombrit un peu l'image de fond pour faire ressortir le panneau */
-.background-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
+/* La vidéo en arrière-plan total */
+#bg-video {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1000;
+    transform: translateX(-50%) translateY(-50%);
+    object-fit: cover;
+    filter: brightness(0.4); /* Assombrit un peu la vidéo pour la lisibilité */
+}
+
+.logo-container {
+    margin-bottom: 30px;
+    text-align: center;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6));
+}
+
+.logo-container img {
+    max-width: 250px;
+    height: auto;
+}
+
+.card {
+    background: rgba(22, 33, 43, 0.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid #735f3d;
+    padding: 40px 35px;
+    border-radius: 6px;
     width: 100%;
-    height: 100%;
-    background: rgba(15, 15, 20, 0.6);
-    z-index: 1;
-}
-
-/* L'effet Glassmorphism */
-.glass-panel {
-    position: relative;
-    z-index: 2;
-    background: rgba(30, 30, 40, 0.6);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 40px;
-    width: 350px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    max-width: 420px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.5);
     text-align: center;
 }
 
-.glass-panel h1 {
-    font-size: 2em;
-    letter-spacing: 4px;
-    margin-bottom: 5px;
-    color: #4da8da; /* Couleur thème Echo */
+.input-group {
+    position: relative;
+    margin: 18px 0;
 }
 
-.glass-panel h2 {
-    font-size: 1em;
-    font-weight: 400;
-    color: #ccc;
-    margin-bottom: 30px;
+.input-group span {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #7a8a99;
+    font-size: 16px;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="date"] {
+input {
     width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    border-radius: 8px;
-    outline: none;
-    transition: 0.3s ease;
+    padding: 15px 15px 15px 45px;
+    background: rgba(10, 16, 22, 0.85);
+    border: 1px solid #2a3642;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 15px;
+    transition: all 0.3s;
+}
+
+input[type="date"] {
+    padding-left: 50px;
+    color: #9da5b0;
 }
 
 input:focus {
-    border-color: #4da8da;
-    box-shadow: 0 0 8px rgba(77, 168, 218, 0.5);
+    border-color: #d4af37;
+    outline: none;
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
 }
 
-.date-container {
-    text-align: left;
-}
-
-.date-container label {
-    display: block;
-    font-size: 0.85em;
-    color: #bbb;
-    margin-bottom: 5px;
-    padding-left: 5px;
-}
-
-button {
-    margin-top: 10px;
-    padding: 12px;
-    background: linear-gradient(135deg, #4da8da 0%, #1e5799 100%);
-    border: none;
-    border-radius: 8px;
-    color: white;
+.btn-primary {
+    width: 100%;
+    padding: 15px;
+    margin-top: 15px;
+    background: linear-gradient(to bottom, #d6a848, #a37827);
+    color: #fff;
     font-weight: bold;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ffdb7a;
     cursor: pointer;
-    transition: 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: all 0.2s;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(to bottom, #edbf5a, #b5862d);
+    transform: translateY(-1px);
+}
+
+.link-forgot {
+    display: block;
+    margin: 15px 0;
+    color: #9da5b0;
+    font-size: 13px;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.link-forgot:hover { 
+    color: #d6a848; 
+}
+
+.divider {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #7a8a99;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #3a4856;
+}
+
+.divider::before { margin-right: 15px; }
+.divider::after { margin-left: 15px; }
+
+.btn-secondary {
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    color: #aebacd;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #4a5a6a;
+    cursor: pointer;
+    text-transform: uppercase;
     letter-spacing: 1px;
+    transition: all 0.2s;
 }
 
-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(77, 168, 218, 0.4);
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border-color: #7a8a99;
 }
 
-.status-message {
-    margin-top: 20px;
-    font-size: 0.9em;
-    min-height: 20px;
+#log {
+    margin-top: 25px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 11px;
+    text-align: left;
+    max-height: 80px;
+    overflow-y: auto;
+    border: 1px solid #222;
+    color: #88c0d0;
 }
-
-.error { color: #ff6b6b; }
-.success { color: #51cf66; }
