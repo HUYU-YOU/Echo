@@ -2,104 +2,126 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Echo T-RPG - Connexion</title>
+    <title>Echo T-RPG - Portail</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Le bon chemin vers ton image de fond */
+            /* On pointe vers ton image exacte */
             background: url('CLIENT/assets/img/background.png') no-repeat center center fixed;
             background-size: cover;
             color: #e0e0e0;
             height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
-            /* J'ai remplacé "center" par un flex-start avec du padding pour descendre légèrement la fenêtre */
-            align-items: flex-start;
-            padding-top: 15vh; 
+            align-items: center;
+            /* Un léger décalage vers le haut pour respecter la perspective de ton image */
+            padding-bottom: 5vh;
         }
 
-        .card {
-            background: rgba(10, 15, 22, 0.65);
-            backdrop-filter: blur(6px);
-            border: 2px solid #5c4d33;
-            padding: 35px 30px;
-            border-radius: 8px;
-            width: 100%;
-            max-width: 440px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 0, 0, 0.4);
-            text-align: center;
-        }
-
+        /* Le logo flotte désormais au-dessus de la boîte */
         .logo-container {
-            margin-bottom: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+            /* Une petite ombre portée pour que le logo se détache bien du ciel */
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6));
         }
 
         .logo-container img {
-            /* Le bon chemin vers ton logo */
-            max-width: 180px;
+            max-width: 250px; /* Plus grand et imposant */
             height: auto;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
+        }
+
+        /* La carte de connexion stylisée */
+        .card {
+            background: rgba(22, 33, 43, 0.75); /* Bleu très sombre et translucide */
+            backdrop-filter: blur(8px); /* L'effet verre dépoli */
+            border: 1px solid #735f3d; /* Bordure bronze/or vieilli */
+            padding: 40px 35px;
+            border-radius: 6px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
         }
 
         .input-group {
             position: relative;
-            margin: 15px 0;
+            margin: 18px 0;
         }
 
         .input-group span {
             position: absolute;
-            left: 14px;
+            left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #aaa;
+            color: #7a8a99;
             font-size: 16px;
         }
 
         input {
             width: 100%;
-            padding: 14px 14px 14px 45px;
-            background: rgba(15, 20, 28, 0.8);
-            border: 1px solid #444b54;
+            padding: 15px 15px 15px 45px;
+            background: rgba(10, 16, 22, 0.85); /* Fond très sombre pour les inputs */
+            border: 1px solid #2a3642;
             color: #fff;
             border-radius: 4px;
             font-size: 15px;
+            transition: all 0.3s;
         }
 
         input:focus {
             border-color: #d4af37;
             outline: none;
-            box-shadow: 0 0 6px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
         }
 
+        /* Bouton principal (Doré) */
         .btn-primary {
             width: 100%;
-            padding: 14px;
-            margin-top: 10px;
-            background: linear-gradient(to bottom, #d4af37, #996515);
-            color: #111;
+            padding: 15px;
+            margin-top: 15px;
+            background: linear-gradient(to bottom, #d6a848, #a37827);
+            color: #fff;
             font-weight: bold;
             font-size: 16px;
             border-radius: 4px;
-            border: 1px solid #ffdf73;
+            border: 1px solid #ffdb7a;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            letter-spacing: 1.5px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             transition: all 0.2s;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(to bottom, #e6c550, #b37719);
+            background: linear-gradient(to bottom, #edbf5a, #b5862d);
+            transform: translateY(-1px);
         }
 
+        .link-forgot {
+            display: block;
+            margin: 15px 0;
+            color: #9da5b0;
+            font-size: 13px;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .link-forgot:hover { 
+            color: #d6a848; 
+        }
+
+        /* Séparateur "OU" */
         .divider {
             margin: 20px 0;
             display: flex;
             align-items: center;
             text-align: center;
-            color: #888;
+            color: #7a8a99;
             font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -108,69 +130,59 @@
         .divider::before, .divider::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid #444b54;
+            border-bottom: 1px solid #3a4856;
         }
 
         .divider::before { margin-right: 15px; }
         .divider::after { margin-left: 15px; }
 
-        .link-forgot {
-            display: block;
-            margin: 12px 0 5px 0;
-            color: #adb5bd;
-            font-size: 13px;
-            text-decoration: none;
-        }
-
-        .link-forgot:hover { 
-            color: #d4af37; 
-            text-decoration: underline; 
-        }
-
+        /* Bouton secondaire (Sombre) */
         .btn-secondary {
             width: 100%;
-            padding: 12px;
-            background: rgba(25, 33, 41, 0.6);
-            color: #d0d6dc;
+            padding: 14px;
+            background: transparent;
+            color: #aebacd;
             font-weight: 600;
             font-size: 14px;
             border-radius: 4px;
-            border: 1px solid #4a5664;
+            border: 1px solid #4a5a6a;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             transition: all 0.2s;
         }
 
         .btn-secondary:hover {
-            background: rgba(35, 47, 59, 0.85);
+            background: rgba(255, 255, 255, 0.05);
             color: #fff;
-            border-color: #6c7d90;
+            border-color: #7a8a99;
         }
 
+        /* Console de debug réseau (plus discrète) */
         #log {
-            margin-top: 20px;
+            margin-top: 25px;
             padding: 10px;
-            background: rgba(5, 8, 12, 0.85);
+            background: rgba(0, 0, 0, 0.6);
             border-radius: 4px;
             font-family: monospace;
-            font-size: 12px;
+            font-size: 11px;
             text-align: left;
-            max-height: 100px;
+            max-height: 80px;
             overflow-y: auto;
-            border: 1px solid #333;
-            color: #7ec699;
+            border: 1px solid #222;
+            color: #88c0d0; /* Un bleu cyan très doux */
         }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <!-- Intégration du logo avec le chemin demandé -->
-    <div class="logo-container">
-        <img src="CLIENT/assets/img/logo.png" alt="Logo Echo" onerror="this.style.display='none'">
-    </div>
+<!-- Le logo flotte tout en haut -->
+<div class="logo-container">
+    <img src="CLIENT/assets/img/logo.png" alt="Logo Echo" onerror="this.innerHTML='<h1 style=\'color:#d4af37; font-size: 40px; text-shadow: 0 4px 10px rgba(0,0,0,0.8);\'>ECHO</h1>'">
+</div>
 
+<!-- La boîte de connexion en dessous -->
+<div class="card">
     <div class="input-group">
         <span>👤</span>
         <input type="text" id="username" placeholder="Nom d'utilisateur" value="HeroTactical">
@@ -196,33 +208,33 @@
     const logDiv = document.getElementById('log');
 
     function appendLog(message, isError = false) {
-        logDiv.innerHTML += `<div style="color: ${isError ? '#ff5252' : '#7ec699'}">${message}</div>`;
+        logDiv.innerHTML += `<div style="color: ${isError ? '#bf616a' : '#a3be8c'}">${message}</div>`;
         logDiv.scrollTop = logDiv.scrollHeight;
     }
 
-    // Connexion à ton serveur autoritaire sur Codespaces
+    // Connexion à ton serveur autoritaire
     const serverUrl = 'wss://ubiquitous-succotash-5gp4949j4x6wc79p6-8080.app.github.dev';
     const ws = new WebSocket(serverUrl);
 
     ws.onopen = () => {
-        appendLog("🟢 Connecté au serveur WebSocket !");
+        appendLog("🟢 Connecté au serveur autoritaire.");
     };
 
     ws.onmessage = (event) => {
         try {
             const data = JSON.parse(event.data);
-            appendLog(`📩 Réponse : ${JSON.stringify(data)}`);
+            appendLog(`📩 Rép. Serveur : ${JSON.stringify(data)}`);
         } catch (e) {
             appendLog(`📩 Données : ${event.data}`);
         }
     };
 
     ws.onerror = () => {
-        appendLog("🔴 Erreur de connexion au serveur.", true);
+        appendLog("🔴 Erreur de connexion réseau.", true);
     };
 
     ws.onclose = () => {
-        appendLog("❌ Déconnecté du serveur.", true);
+        appendLog("❌ Déconnecté.", true);
     };
 
     function sendAction(actionType) {
@@ -230,7 +242,7 @@
         const pass = document.getElementById('password').value;
 
         if (!user || !pass) {
-            appendLog("⚠️ Remplissez tous les champs.", true);
+            appendLog("⚠️ Renseignez les identifiants.", true);
             return;
         }
 
@@ -242,9 +254,9 @@
 
         if (ws.readyState === WebSocket.OPEN) {
             ws.send(JSON.stringify(packet));
-            appendLog(`📤 Envoi [${actionType}] pour ${user}...`);
+            appendLog(`📤 Requête [${actionType}] envoyée...`);
         } else {
-            appendLog("🔴 Non connecté au serveur.", true);
+            appendLog("🔴 Serveur injoignable.", true);
         }
     }
 </script>
