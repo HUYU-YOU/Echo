@@ -8,24 +8,39 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('CLIENT/assets/img/background.png') no-repeat center center fixed;
+            /* Le bon chemin vers ton image de fond */
+            background: url('CLIENT/assets/img/background.png') no-repeat center center fixed;
             background-size: cover;
             color: #e0e0e0;
             height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            /* J'ai remplacé "center" par un flex-start avec du padding pour descendre légèrement la fenêtre */
+            align-items: flex-start;
+            padding-top: 15vh; 
         }
 
         .card {
-            background: rgba(16, 22, 28, 0.92);
+            background: rgba(10, 15, 22, 0.65);
+            backdrop-filter: blur(6px);
             border: 2px solid #5c4d33;
             padding: 35px 30px;
             border-radius: 8px;
             width: 100%;
             max-width: 440px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 0, 0, 0.4);
             text-align: center;
+        }
+
+        .logo-container {
+            margin-bottom: 25px;
+        }
+
+        .logo-container img {
+            /* Le bon chemin vers ton logo */
+            max-width: 180px;
+            height: auto;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
         }
 
         .input-group {
@@ -38,15 +53,15 @@
             left: 14px;
             top: 50%;
             transform: translateY(-50%);
-            color: #8c8c8c;
+            color: #aaa;
             font-size: 16px;
         }
 
         input {
             width: 100%;
             padding: 14px 14px 14px 45px;
-            background: rgba(10, 14, 18, 0.9);
-            border: 1px solid #333b42;
+            background: rgba(15, 20, 28, 0.8);
+            border: 1px solid #444b54;
             color: #fff;
             border-radius: 4px;
             font-size: 15px;
@@ -55,7 +70,7 @@
         input:focus {
             border-color: #d4af37;
             outline: none;
-            box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 6px rgba(212, 175, 55, 0.4);
         }
 
         .btn-primary {
@@ -77,7 +92,6 @@
 
         .btn-primary:hover {
             background: linear-gradient(to bottom, #e6c550, #b37719);
-            box-shadow: 0 6px 15px rgba(212,175,55,0.3);
         }
 
         .divider {
@@ -85,7 +99,7 @@
             display: flex;
             align-items: center;
             text-align: center;
-            color: #777;
+            color: #888;
             font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -94,7 +108,7 @@
         .divider::before, .divider::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid #333b42;
+            border-bottom: 1px solid #444b54;
         }
 
         .divider::before { margin-right: 15px; }
@@ -102,8 +116,8 @@
 
         .link-forgot {
             display: block;
-            margin: 10px 0 5px 0;
-            color: #9da5b0;
+            margin: 12px 0 5px 0;
+            color: #adb5bd;
             font-size: 13px;
             text-decoration: none;
         }
@@ -116,12 +130,12 @@
         .btn-secondary {
             width: 100%;
             padding: 12px;
-            background: rgba(25, 33, 41, 0.8);
-            color: #c0c6cc;
+            background: rgba(25, 33, 41, 0.6);
+            color: #d0d6dc;
             font-weight: 600;
             font-size: 14px;
             border-radius: 4px;
-            border: 1px solid #3a4654;
+            border: 1px solid #4a5664;
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -129,22 +143,22 @@
         }
 
         .btn-secondary:hover {
-            background: rgba(35, 47, 59, 1);
+            background: rgba(35, 47, 59, 0.85);
             color: #fff;
-            border-color: #5c6d80;
+            border-color: #6c7d90;
         }
 
         #log {
             margin-top: 20px;
             padding: 10px;
-            background: rgba(5, 8, 12, 0.9);
+            background: rgba(5, 8, 12, 0.85);
             border-radius: 4px;
             font-family: monospace;
             font-size: 12px;
             text-align: left;
             max-height: 100px;
             overflow-y: auto;
-            border: 1px solid #222;
+            border: 1px solid #333;
             color: #7ec699;
         }
     </style>
@@ -152,6 +166,11 @@
 <body>
 
 <div class="card">
+    <!-- Intégration du logo avec le chemin demandé -->
+    <div class="logo-container">
+        <img src="CLIENT/assets/img/logo.png" alt="Logo Echo" onerror="this.style.display='none'">
+    </div>
+
     <div class="input-group">
         <span>👤</span>
         <input type="text" id="username" placeholder="Nom d'utilisateur" value="HeroTactical">
@@ -170,7 +189,7 @@
     
     <button class="btn-secondary" onclick="sendAction('register')">Créer un compte</button>
     
-    <div id="log">État : Initialisation de la connexion...</div>
+    <div id="log">État : Initialisation...</div>
 </div>
 
 <script>
@@ -181,6 +200,7 @@
         logDiv.scrollTop = logDiv.scrollHeight;
     }
 
+    // Connexion à ton serveur autoritaire sur Codespaces
     const serverUrl = 'wss://ubiquitous-succotash-5gp4949j4x6wc79p6-8080.app.github.dev';
     const ws = new WebSocket(serverUrl);
 
