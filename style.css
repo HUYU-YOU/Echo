@@ -1,0 +1,122 @@
+/* Reset basique */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=2560&auto=format&fit=crop'); /* Image de fond temporaire sombre */
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+/* Assombrit un peu l'image de fond pour faire ressortir le panneau */
+.background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 15, 20, 0.6);
+    z-index: 1;
+}
+
+/* L'effet Glassmorphism */
+.glass-panel {
+    position: relative;
+    z-index: 2;
+    background: rgba(30, 30, 40, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 40px;
+    width: 350px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+.glass-panel h1 {
+    font-size: 2em;
+    letter-spacing: 4px;
+    margin-bottom: 5px;
+    color: #4da8da; /* Couleur thème Echo */
+}
+
+.glass-panel h2 {
+    font-size: 1em;
+    font-weight: 400;
+    color: #ccc;
+    margin-bottom: 30px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 8px;
+    outline: none;
+    transition: 0.3s ease;
+}
+
+input:focus {
+    border-color: #4da8da;
+    box-shadow: 0 0 8px rgba(77, 168, 218, 0.5);
+}
+
+.date-container {
+    text-align: left;
+}
+
+.date-container label {
+    display: block;
+    font-size: 0.85em;
+    color: #bbb;
+    margin-bottom: 5px;
+    padding-left: 5px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 12px;
+    background: linear-gradient(135deg, #4da8da 0%, #1e5799 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+    letter-spacing: 1px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(77, 168, 218, 0.4);
+}
+
+.status-message {
+    margin-top: 20px;
+    font-size: 0.9em;
+    min-height: 20px;
+}
+
+.error { color: #ff6b6b; }
+.success { color: #51cf66; }
