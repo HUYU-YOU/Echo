@@ -3,292 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>Echo T-RPG - Portail</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: url('CLIENT/assets/img/background.png') no-repeat center center fixed;
-            background-size: cover;
-            color: #e0e0e0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding-bottom: 5vh;
-        }
-
-        .logo-container {
-            margin-bottom: 30px;
-            text-align: center;
-            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6));
-        }
-
-        .logo-container img {
-            max-width: 250px;
-            height: auto;
-        }
-
-        .card {
-            background: rgba(22, 33, 43, 0.75);
-            backdrop-filter: blur(8px);
-            border: 1px solid #735f3d;
-            padding: 40px 35px;
-            border-radius: 6px;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.5);
-            text-align: center;
-        }
-
-        .input-group {
-            position: relative;
-            margin: 18px 0;
-        }
-
-        .input-group span {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #7a8a99;
-            font-size: 16px;
-        }
-
-        input {
-            width: 100%;
-            padding: 15px 15px 15px 45px;
-            background: rgba(10, 16, 22, 0.85);
-            border: 1px solid #2a3642;
-            color: #fff;
-            border-radius: 4px;
-            font-size: 15px;
-            transition: all 0.3s;
-        }
-
-        /* Ajustement spécifique pour l'icône calendrier qui prend un peu plus de place */
-        input[type="date"] {
-            padding-left: 50px;
-            color: #9da5b0;
-        }
-
-        input:focus {
-            border-color: #d4af37;
-            outline: none;
-            box-shadow: 0 0 8px rgba(212, 175, 55, 0.3);
-        }
-
-        .btn-primary {
-            width: 100%;
-            padding: 15px;
-            margin-top: 15px;
-            background: linear-gradient(to bottom, #d6a848, #a37827);
-            color: #fff;
-            font-weight: bold;
-            font-size: 16px;
-            border-radius: 4px;
-            border: 1px solid #ffdb7a;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.6);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            transition: all 0.2s;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(to bottom, #edbf5a, #b5862d);
-            transform: translateY(-1px);
-        }
-
-        .link-forgot {
-            display: block;
-            margin: 15px 0;
-            color: #9da5b0;
-            font-size: 13px;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .link-forgot:hover { 
-            color: #d6a848; 
-        }
-
-        .divider {
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: #7a8a99;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid #3a4856;
-        }
-
-        .divider::before { margin-right: 15px; }
-        .divider::after { margin-left: 15px; }
-
-        .btn-secondary {
-            width: 100%;
-            padding: 14px;
-            background: transparent;
-            color: #aebacd;
-            font-weight: 600;
-            font-size: 14px;
-            border-radius: 4px;
-            border: 1px solid #4a5a6a;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.2s;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            border-color: #7a8a99;
-        }
-
-        #log {
-            margin-top: 25px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 11px;
-            text-align: left;
-            max-height: 80px;
-            overflow-y: auto;
-            border: 1px solid #222;
-            color: #88c0d0;
-        }
-    </style>
+    <!-- On relie ton fichier CSS ici -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="logo-container">
-    <img src="CLIENT/assets/img/logo.png" alt="Logo Echo" onerror="this.innerHTML='<h1 style=\'color:#d4af37; font-size: 40px; text-shadow: 0 4px 10px rgba(0,0,0,0.8);\'>ECHO</h1>'">
-</div>
+    <!-- 🎬 LA VIDÉO DE FOND -->
+    <video autoplay loop muted playsinline id="bg-video">
+        <source src="CLIENT/assets/img/background.mp4" type="video/mp4">
+    </video>
 
-<div class="card">
-    <div class="input-group">
-        <span>👤</span>
-        <input type="text" id="username" placeholder="Nom d'utilisateur (Pseudo)" autocomplete="off">
-    </div>
-    
-    <div class="input-group">
-        <span>📧</span>
-        <input type="email" id="email" placeholder="Adresse e-mail" autocomplete="off">
+    <!-- Le logo flotte tout en haut -->
+    <div class="logo-container">
+        <img src="CLIENT/assets/img/logo.png" alt="Logo Echo" onerror="this.innerHTML='<h1 style=\'color:#d4af37; font-size: 40px; text-shadow: 0 4px 10px rgba(0,0,0,0.8);\'>ECHO</h1>'">
     </div>
 
-    <div class="input-group">
-        <span>📅</span>
-        <input type="date" id="dob" title="Date de naissance">
+    <!-- La boîte de connexion en dessous -->
+    <div class="card">
+        <div class="input-group">
+            <span>👤</span>
+            <input type="text" id="username" placeholder="Nom d'utilisateur (Pseudo)" autocomplete="off">
+        </div>
+        
+        <div class="input-group">
+            <span>📧</span>
+            <input type="email" id="email" placeholder="Adresse e-mail" autocomplete="off">
+        </div>
+
+        <div class="input-group">
+            <span>📅</span>
+            <input type="date" id="dob" title="Date de naissance">
+        </div>
+
+        <div class="input-group">
+            <span>🔒</span>
+            <input type="password" id="password" placeholder="Mot de passe">
+        </div>
+        
+        <button class="btn-primary" onclick="sendAction('login')">Se connecter</button>
+        
+        <a href="#" class="link-forgot" onclick="return false;">Mot de passe oublié ?</a>
+        
+        <div class="divider">ou</div>
+        
+        <button class="btn-secondary" onclick="sendAction('register')">Créer un compte</button>
+        
+        <div id="log">État : Initialisation...</div>
     </div>
 
-    <div class="input-group">
-        <span>🔒</span>
-        <input type="password" id="password" placeholder="Mot de passe">
-    </div>
-    
-    <button class="btn-primary" onclick="sendAction('login')">Se connecter</button>
-    
-    <a href="#" class="link-forgot" onclick="return false;">Mot de passe oublié ?</a>
-    
-    <div class="divider">ou</div>
-    
-    <button class="btn-secondary" onclick="sendAction('register')">Créer un compte</button>
-    
-    <div id="log">État : Initialisation...</div>
-</div>
-
-<script>
-    const logDiv = document.getElementById('log');
-
-    function appendLog(message, isError = false) {
-        logDiv.innerHTML += `<div style="color: ${isError ? '#bf616a' : '#a3be8c'}">${message}</div>`;
-        logDiv.scrollTop = logDiv.scrollHeight;
-    }
-
-    // Assure-toi que cette URL pointe bien vers ton espace Codespaces actif sur le port 8081
-    const serverUrl = 'wss://ubiquitous-succotash-5gp4949j4x6wc79p6-8081.app.github.dev';
-    const ws = new WebSocket(serverUrl);
-
-    ws.onopen = () => {
-        appendLog("🟢 Connecté au serveur autoritaire.");
-    };
-
-    ws.onmessage = (event) => {
-        try {
-            const data = JSON.parse(event.data);
-            appendLog(`📩 Rép. Serveur : ${JSON.stringify(data)}`);
-        } catch (e) {
-            appendLog(`📩 Données : ${event.data}`);
-        }
-    };
-
-    ws.onerror = () => {
-        appendLog("🔴 Erreur de connexion réseau.", true);
-    };
-
-    ws.onclose = () => {
-        appendLog("❌ Déconnecté.", true);
-    };
-
-    function sendAction(actionType) {
-        const user = document.getElementById('username').value;
-        const pass = document.getElementById('password').value;
-
-        if (!user || !pass) {
-            appendLog("⚠️ Renseignez au moins le pseudo et le mot de passe.", true);
-            return;
-        }
-
-        let packet = {
-            action: actionType,
-            username: user,
-            password: pass
-        };
-
-        // Si c'est une création de compte, on vérifie l'âge et l'email
-        if (actionType === 'register') {
-            const email = document.getElementById('email').value;
-            const dob = document.getElementById('dob').value;
-
-            if (!email || !dob) {
-                appendLog("⚠️ L'e-mail et la date de naissance sont requis pour s'inscrire.", true);
-                return;
-            }
-
-            // Calcul de l'âge
-            const ageDifMs = Date.now() - new Date(dob).getTime();
-            const ageDate = new Date(ageDifMs);
-            const age = Math.abs(ageDate.getUTCFullYear() - 1970);
-
-            if (age < 13) {
-                appendLog("🔴 Inscription refusée : Vous devez avoir au moins 13 ans.", true);
-                return;
-            }
-
-            packet.email = email;
-            packet.dob = dob;
-        }
-
-        if (ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify(packet));
-            appendLog(`📤 Requête [${actionType}] envoyée...`);
-        } else {
-            appendLog("🔴 Serveur injoignable.", true);
-        }
-    }
-</script>
+    <!-- 🔗 LE LIEN VERS TON FICHIER JS -->
+    <script src="client.js"></script>
 
 </body>
 </html>
