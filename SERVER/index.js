@@ -2,7 +2,7 @@
 const WebSocket = require('ws');
 const { registerPlayer } = require('./Auth/account'); 
 
-const PORT = 8080;
+const PORT = 8081;
 const wss = new WebSocket.Server({ port: PORT });
 
 console.log(`[SERVEUR] Démarrage... Écoute sur le port ${PORT}`);
