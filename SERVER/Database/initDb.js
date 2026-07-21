@@ -1,9 +1,9 @@
 // SERVER/Database/initDb.js
-const pool = require('./db');
+const db = require('./db');
 
 async function createTables() {
     const queryText = `
-        CREATE TABLE IF NOT EXISTS users (
+        CREATE TABLE IF NOT EXISTS players (
             id SERIAL PRIMARY KEY,
             username VARCHAR(50) UNIQUE NOT NULL,
             password_hash VARCHAR(255) NOT NULL,
@@ -12,12 +12,12 @@ async function createTables() {
     `;
 
     try {
-        await pool.query(queryText);
-        console.log("🟢 [INIT] Table 'users' vérifiée/créée avec succès !");
+        await db.query(queryText);
+        console.log("🟢 [INIT] Table 'players' vérifiée/créée avec succès !");
     } catch (error) {
-        console.error("🔴 [INIT] Erreur lors de la création des tables :", error);
+        console.error("🔴 [INIT] Erreur lors de la création de la table :", error.message);
     } finally {
-        process.exit(); // Coupe le script une fois terminé
+        process.exit();
     }
 }
 
