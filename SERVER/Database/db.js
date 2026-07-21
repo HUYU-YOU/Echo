@@ -1,12 +1,12 @@
 // SERVER/Database/db.js
 const { Pool } = require('pg');
 
-// Configuration de la connexion PostgreSQL avec variables d'environnement (Sécurité !)
+// Configuration de la connexion PostgreSQL avec variables d'environnement
 const pool = new Pool({
     user: process.env.DB_USER || 'postgres',
     host: process.env.DB_HOST || 'localhost',
-    database: process.env.DB_NAME || 'echo_rpg',
-    password: process.env.DB_PASSWORD || 'ton_mot_de_passe',
+    database: process.env.DB_NAME || 'postgres', // J'ai remis 'postgres' par défaut pour éviter les crashs sur Codespaces
+    password: process.env.DB_PASSWORD || 'postgres',
     port: process.env.DB_PORT || 5432,
 });
 
@@ -32,7 +32,4 @@ const query = async (text, params) => {
     }
 };
 
-// On exporte uniquement la méthode 'query'
-module.exports = {
-    query,
-};
+module.exports = { query };
