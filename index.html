@@ -19,51 +19,23 @@
     </div>
 
     <!-- La boîte de connexion en dessous -->
-   <!-- La boîte de connexion en dessous -->
-<div class="card">
-    <div class="input-group">
-        <span>👤</span>
-        <input type="text" id="username" placeholder="Nom d'utilisateur (Pseudo)" autocomplete="off">
-    </div>
-    
-    <!-- ⚠️ NOUVEAU : Conteneur caché par défaut pour l'inscription -->
-    <div id="register-fields" style="display: none;">
+    <div class="card">
         <div class="input-group">
-            <span>📧</span>
-            <input type="email" id="email" placeholder="Adresse e-mail" autocomplete="off">
+            <span>👤</span>
+            <input type="text" id="username" placeholder="Nom d'utilisateur (Pseudo)" autocomplete="off">
         </div>
-
-        <div class="input-group">
-            <span>📅</span>
-            <input type="date" id="dob" title="Date de naissance">
-        </div>
-    </div>
-
-    <div class="input-group">
-        <span>🔒</span>
-        <input type="password" id="password" placeholder="Mot de passe">
-    </div>
-    
-    <!-- Les boutons ont maintenant des IDs -->
-    <button id="main-btn" class="btn-primary" onclick="sendAction('login')">SE CONNECTER</button>
-    
-    <a href="#" id="forgot-link" class="link-forgot" onclick="return false;">Mot de passe oublié ?</a>
-    
-    <div class="divider">ou</div>
-    
-    <button id="secondary-btn" class="btn-secondary" onclick="toggleMode()">CRÉER UN COMPTE</button>
-    
-    <div id="log">État : Initialisation...</div>
-</div>
         
-        <div class="input-group">
-            <span>📧</span>
-            <input type="email" id="email" placeholder="Adresse e-mail" autocomplete="off">
-        </div>
+        <!-- Conteneur caché par défaut pour l'inscription -->
+        <div id="register-fields" style="display: none;">
+            <div class="input-group">
+                <span>📧</span>
+                <input type="email" id="email" placeholder="Adresse e-mail" autocomplete="off">
+            </div>
 
-        <div class="input-group">
-            <span>📅</span>
-            <input type="date" id="dob" title="Date de naissance">
+            <div class="input-group">
+                <span>📅</span>
+                <input type="date" id="dob" title="Date de naissance">
+            </div>
         </div>
 
         <div class="input-group">
@@ -71,14 +43,16 @@
             <input type="password" id="password" placeholder="Mot de passe">
         </div>
         
-        <button class="btn-primary" onclick="sendAction('login')">Se connecter</button>
+        <!-- Boutons avec IDs dynamiques -->
+        <button id="main-btn" class="btn-primary" onclick="sendAction('login')">SE CONNECTER</button>
         
-        <a href="#" class="link-forgot" onclick="return false;">Mot de passe oublié ?</a>
+        <a href="#" id="forgot-link" class="link-forgot" onclick="return false;">Mot de passe oublié ?</a>
         
         <div class="divider">ou</div>
         
-        <button class="btn-secondary" onclick="sendAction('register')">Créer un compte</button>
+        <button id="secondary-btn" class="btn-secondary" onclick="toggleMode()">CRÉER UN COMPTE</button>
         
+        <!-- Console réseau -->
         <div id="log">État : Initialisation...</div>
     </div>
 
