@@ -1,43 +1,57 @@
-// SERVER/index.js
 const WebSocket = require('ws');
-const { registerPlayer } = require('./Auth/account'); 
 
-const PORT = 8081;
+// Configuration stricte sur le port 8080
+const PORT = 8080;
 const wss = new WebSocket.Server({ port: PORT });
 
-console.log(`[SERVEUR] Démarrage... Écoute sur le port ${PORT}`);
+console.log(`\n===========================================`);
+console.log(`🚀 Serveur Echo T-RPG en ligne sur le port ${PORT}`);
+console.log(`🛡️  En attente de connexions (Serveur Autoritaire)`);
+console.log(`===========================================\n`);
 
-wss.on('connection', function connection(ws) {
-    console.log("[RÉSEAU] 🟢 Un nouveau client est connecté.");
+wss.on('connection', (ws) => {
+    console.log('🟢 [RÉSEAU] Un nouveau client s\'est connecté.');
 
-    ws.on('message', async function incoming(message) {
-        const rawData = message.toString();
-        console.log(`[REÇU] : ${rawData}`);
-
+    ws.on('message', (message) => {
         try {
+            const rawData = message.toString();
+            console.log(`\n📩 [PAQUET REÇU] : ${rawData}`);
+            
             const packet = JSON.parse(rawData);
-
-            if (packet.action === "register") {
-                const { username, password } = packet;
-                const result = await registerPlayer(username, password);
-
+            
+            // --- CANAL D'INSCRIPTION ---
+            if (packet.action === 'register') {
+                console.log(`👤 Tentative d'inscription : ${packet.username}`);
+                console.log(`📧 E-mail : ${packet.email} | 📅 Date de naissance : ${packet.dob}`);
+                
+                // Le paquet de réponse attendu par ton client.js
                 const response = {
                     action: "register_response",
-                    success: result.success,
-                    message: result.message,
-                    player: result.player
+                    success: true,
+                    message: `Bienvenue ${packet.username}, inscription validée sur le port 8080 !`
                 };
+                
                 ws.send(JSON.stringify(response));
-            } 
-            else if (packet.action === "ping") {
-                ws.send(JSON.stringify({ action: "ping_response", status: "success" }));
+                console.log(`📤 [RÉPONSE] Succès envoyé au client.`);
             }
-            else {
-                console.log("[RÉSEAU] 🟡 Action inconnue reçue :", packet.action);
+            
+            // --- CANAL DE CONNEXION ---
+            else if (packet.action === 'login') {
+                console.log(`🔑 Tentative de connexion : ${packet.username}`);
+                // Simulation pour le moment
+                ws.send(JSON.stringify({
+                    action: "login_response",
+                    success: true,
+                    message: "Connexion réussie !"
+                }));
             }
 
         } catch (error) {
-            console.error("[RÉSEAU] 🔴 Erreur de lecture du paquet : Format invalide.");
+            console.log(`🔴 [ERREUR] Paquet malformé ou illisible.`);
         }
+    });
+
+    ws.on('close', () => {
+        console.log('🔴 [RÉSEAU] Un client s\'est déconnecté.');
     });
 });
