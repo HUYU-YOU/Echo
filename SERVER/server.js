@@ -38,7 +38,7 @@ wss.on('connection', (ws) => {
             // --- LOGIQUE DE CONNEXION ---
             else if (data.action === 'login') {
                 console.log(`🔑 Tentative de connexion pour le joueur : ${data.username}`);
-                // TODO: Vérification en base de données
+                // À venir : Vérification en base de données
             }
 
         } catch (error) {
