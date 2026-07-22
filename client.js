@@ -1,5 +1,34 @@
 const logDiv = document.getElementById('log');
+// --- GESTION DE L'INTERFACE (UX) ---
+let isRegisterMode = false;
 
+function toggleMode() {
+    isRegisterMode = !isRegisterMode; // On inverse le mode
+    
+    const registerFields = document.getElementById('register-fields');
+    const mainBtn = document.getElementById('main-btn');
+    const secondaryBtn = document.getElementById('secondary-btn');
+    const forgotLink = document.getElementById('forgot-link');
+
+    if (isRegisterMode) {
+        // Mode INSCRIPTION
+        registerFields.style.display = 'block';
+        mainBtn.innerText = "VALIDER L'INSCRIPTION";
+        mainBtn.onclick = () => sendAction('register');
+        
+        secondaryBtn.innerText = "RETOUR À LA CONNEXION";
+        forgotLink.style.display = 'none'; // On cache le lien "mot de passe oublié"
+    } else {
+        // Mode CONNEXION
+        registerFields.style.display = 'none';
+        mainBtn.innerText = "SE CONNECTER";
+        mainBtn.onclick = () => sendAction('login');
+        
+        secondaryBtn.innerText = "CRÉER UN COMPTE";
+        forgotLink.style.display = 'block';
+    }
+}
+// -----------------------------------
 function appendLog(message, isError = false) {
     logDiv.innerHTML += `<div style="color: ${isError ? '#bf616a' : '#a3be8c'}">${message}</div>`;
     logDiv.scrollTop = logDiv.scrollHeight;
