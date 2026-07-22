@@ -3,35 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Echo T-RPG - Portail</title>
-    <!-- On relie ton fichier CSS ici -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- 🎬 LA VIDÉO DE FOND -->
     <video autoplay loop muted playsinline id="bg-video">
         <source src="CLIENT/assets/img/background.mp4" type="video/mp4">
     </video>
 
-    <!-- Le logo flotte tout en haut -->
     <div class="logo-container">
         <img src="CLIENT/assets/img/logo.png" alt="Logo Echo" onerror="this.innerHTML='<h1 style=\'color:#d4af37; font-size: 40px; text-shadow: 0 4px 10px rgba(0,0,0,0.8);\'>ECHO</h1>'">
     </div>
 
-    <!-- La boîte de connexion en dessous -->
     <div class="card">
         <div class="input-group">
             <span>👤</span>
             <input type="text" id="username" placeholder="Nom d'utilisateur (Pseudo)" autocomplete="off">
         </div>
         
-        <!-- Conteneur caché par défaut pour l'inscription -->
         <div id="register-fields" style="display: none;">
             <div class="input-group">
                 <span>📧</span>
                 <input type="email" id="email" placeholder="Adresse e-mail" autocomplete="off">
             </div>
-
             <div class="input-group">
                 <span>📅</span>
                 <input type="date" id="dob" title="Date de naissance">
@@ -43,21 +36,14 @@
             <input type="password" id="password" placeholder="Mot de passe">
         </div>
         
-        <!-- Boutons avec IDs dynamiques -->
         <button id="main-btn" class="btn-primary" onclick="sendAction('login')">SE CONNECTER</button>
-        
         <a href="#" id="forgot-link" class="link-forgot" onclick="return false;">Mot de passe oublié ?</a>
-        
         <div class="divider">ou</div>
-        
         <button id="secondary-btn" class="btn-secondary" onclick="toggleMode()">CRÉER UN COMPTE</button>
         
-        <!-- Console réseau -->
         <div id="log">État : Initialisation...</div>
     </div>
 
-    <!-- 🔗 LE LIEN VERS TON FICHIER JS -->
     <script src="client.js"></script>
-
 </body>
 </html>
