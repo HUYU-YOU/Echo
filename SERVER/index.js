@@ -1,5 +1,6 @@
 const WebSocket = require('ws');
-const { Pool } = require('pg'); // <-- AJOUT DU CONNECTEUR BASE DE DONNÉES
+const { Pool } = require('pg');
+const bcrypt = require('bcrypt'); // Importation vitale pour crypter le mot de passe
 
 // --- CONFIGURATION DE LA BASE DE DONNÉES ---
 const db = new Pool({
@@ -10,15 +11,27 @@ const db = new Pool({
     port: 5432,
 });
 
-// Test de la connexion au démarrage
+// Test de connexion et Création de la table 'users' si elle n'existe pas
 db.connect()
-    .then(() => console.log('🐘 [DB] Base de données PostgreSQL connectée avec succès !'))
-    .catch(err => console.error('🔴 [DB] Erreur de connexion à la base de données', err.stack));
+    .then(async () => {
+        console.log('🐘 [DB] Base de données PostgreSQL connectée avec succès !');
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                username VARCHAR(50) UNIQUE NOT NULL,
+                email VARCHAR(255) UNIQUE NOT NULL,
+                dob DATE NOT NULL,
+                password_hash VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+        console.log('📜 [DB] Table "users" vérifiée/prête !');
+    })
+    .catch(err => console.error('🔴 [DB] Erreur de connexion', err.stack));
 
 
 // --- CONFIGURATION DU SERVEUR WEBSOCKET ---
 const PORT = 8080;
-// IMPORTANT : On force l'écoute sur 0.0.0.0 pour GitHub Codespaces
 const wss = new WebSocket.Server({ port: PORT, host: '0.0.0.0' });
 
 console.log(`\n===========================================`);
@@ -29,46 +42,56 @@ console.log(`===========================================\n`);
 wss.on('connection', (ws) => {
     console.log('🟢 [RÉSEAU] Un nouveau client s\'est connecté.');
 
-    ws.on('message', (message) => {
+    // ATTENTION : On ajoute 'async' ici pour pouvoir utiliser la base de données
+    ws.on('message', async (message) => {
         try {
             const rawData = message.toString();
             console.log(`\n📩 [PAQUET REÇU] : ${rawData}`);
-            
             const packet = JSON.parse(rawData);
             
-            // --- CANAL D'INSCRIPTION ---
+            // --- CANAL D'INSCRIPTION (LE VRAI !) ---
             if (packet.action === 'register') {
-                console.log(`👤 Tentative d'inscription : ${packet.username}`);
-                console.log(`📧 E-mail : ${packet.email} | 📅 Date de naissance : ${packet.dob}`);
+                console.log(`👤 Traitement de l'inscription pour : ${packet.username}`);
                 
-                // Simulation en attendant d'écrire la requête SQL (Prochaine étape !)
-                const response = {
-                    action: "register_response",
-                    success: true,
-                    message: `Bienvenue ${packet.username}, inscription validée sur le port 8080 !`
-                };
-                
-                ws.send(JSON.stringify(response));
-                console.log(`📤 [RÉPONSE] Succès envoyé au client.`);
+                try {
+                    // 1. Hachage du mot de passe (on ne stocke JAMAIS en clair)
+                    const hashedPassword = await bcrypt.hash(packet.password, 10);
+                    
+                    // 2. Insertion dans PostgreSQL (Requête paramétrée contre les injections SQL)
+                    const insertQuery = `
+                        INSERT INTO users (username, email, dob, password_hash)
+                        VALUES ($1, $2, $3, $4) RETURNING id
+                    `;
+                    await db.query(insertQuery, [packet.username, packet.email, packet.dob, hashedPassword]);
+                    
+                    // 3. Succès !
+                    ws.send(JSON.stringify({
+                        action: "register_response",
+                        success: true,
+                        message: `Succès : Compte de ${packet.username} créé en Base de Données !`
+                    }));
+                    console.log(`✅ [DB] Nouveau joueur enregistré : ${packet.username}`);
+
+                } catch (dbError) {
+                    // Erreur classique : le pseudo ou l'email existe déjà (contrainte UNIQUE)
+                    console.error(`🔴 [DB ERREUR] :`, dbError.detail || dbError.message);
+                    ws.send(JSON.stringify({
+                        action: "register_response",
+                        success: false,
+                        message: "Erreur : Ce pseudonyme ou cet e-mail est déjà utilisé."
+                    }));
+                }
             }
             
-            // --- CANAL DE CONNEXION ---
+            // --- CANAL DE CONNEXION (Prochaine étape) ---
             else if (packet.action === 'login') {
-                console.log(`🔑 Tentative de connexion : ${packet.username}`);
-                
-                ws.send(JSON.stringify({
-                    action: "login_response",
-                    success: true,
-                    message: "Connexion réussie !"
-                }));
+                ws.send(JSON.stringify({ action: "login_response", success: true, message: "Connexion en travaux..." }));
             }
 
         } catch (error) {
-            console.log(`🔴 [ERREUR] Paquet malformé ou illisible.`);
+            console.log(`🔴 [ERREUR] Paquet malformé.`);
         }
     });
 
-    ws.on('close', () => {
-        console.log('🔴 [RÉSEAU] Un client s\'est déconnecté.');
-    });
+    ws.on('close', () => console.log('🔴 [RÉSEAU] Un client s\'est déconnecté.'));
 });
