@@ -1,8 +1,25 @@
 const WebSocket = require('ws');
+const { Pool } = require('pg'); // <-- AJOUT DU CONNECTEUR BASE DE DONNÉES
 
-// Configuration stricte sur le port 8080
+// --- CONFIGURATION DE LA BASE DE DONNÉES ---
+const db = new Pool({
+    user: 'echo_admin',
+    host: 'localhost',
+    database: 'echo_db',
+    password: 'password123',
+    port: 5432,
+});
+
+// Test de la connexion au démarrage
+db.connect()
+    .then(() => console.log('🐘 [DB] Base de données PostgreSQL connectée avec succès !'))
+    .catch(err => console.error('🔴 [DB] Erreur de connexion à la base de données', err.stack));
+
+
+// --- CONFIGURATION DU SERVEUR WEBSOCKET ---
 const PORT = 8080;
-const wss = new WebSocket.Server({ port: PORT });
+// IMPORTANT : On force l'écoute sur 0.0.0.0 pour GitHub Codespaces
+const wss = new WebSocket.Server({ port: PORT, host: '0.0.0.0' });
 
 console.log(`\n===========================================`);
 console.log(`🚀 Serveur Echo T-RPG en ligne sur le port ${PORT}`);
@@ -24,7 +41,7 @@ wss.on('connection', (ws) => {
                 console.log(`👤 Tentative d'inscription : ${packet.username}`);
                 console.log(`📧 E-mail : ${packet.email} | 📅 Date de naissance : ${packet.dob}`);
                 
-                // Le paquet de réponse attendu par ton client.js
+                // Simulation en attendant d'écrire la requête SQL (Prochaine étape !)
                 const response = {
                     action: "register_response",
                     success: true,
@@ -38,7 +55,7 @@ wss.on('connection', (ws) => {
             // --- CANAL DE CONNEXION ---
             else if (packet.action === 'login') {
                 console.log(`🔑 Tentative de connexion : ${packet.username}`);
-                // Simulation pour le moment
+                
                 ws.send(JSON.stringify({
                     action: "login_response",
                     success: true,
